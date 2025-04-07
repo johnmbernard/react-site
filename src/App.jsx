@@ -1,4 +1,5 @@
 import React from "react";
+import SignUp from "./components/SignUp";
 import SignIn from "./components/SignIn";
 import DynamicForm from "./components/PostForm";
 
@@ -6,7 +7,7 @@ const App = () => {
   return (
     <>
       <div>
-        <h1>Firebase Authentication</h1>
+        <h1>JMB X Lab Feed</h1>
         <ErrorBoundary>
           <SignIn />
         </ErrorBoundary>
