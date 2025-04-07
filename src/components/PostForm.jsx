@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import AutoResizeTextarea from "./AutoResizeTextarea";
+import FormHandler from "./FormHandler"; // Import the reusable component
 
 function DynamicForm() {
   const [selectedOption, setSelectedOption] = useState("");
@@ -10,17 +11,28 @@ function DynamicForm() {
     setFormData({}); // Reset form data when the option changes
   };
 
-  const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const updateFeed = (newData) => {
+    console.log("New data added to feed:", newData);
+    // Add logic to dynamically update the feed (state or API)
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    alert(`Form submitted with data: ${JSON.stringify(formData)}`);
+  const determineEndpoint = () => {
+    // Define different endpoints based on selected option
+    if (selectedOption === "post") {
+      return "https://your-api-endpoint.com/posts";
+    } else if (selectedOption === "feedback") {
+      return "https://your-api-endpoint.com/feedback";
+    }
+    return "";
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <FormHandler
+      formData={formData}
+      setFormData={setFormData}
+      endpoint={determineEndpoint()}
+      onSuccess={updateFeed}
+    >
       <label htmlFor="dropdown">Post or Feedback?</label>
       <select id="dropdown" value={selectedOption} onChange={handleOptionChange}>
         <option value="">--Select an option--</option>
@@ -31,8 +43,12 @@ function DynamicForm() {
       {selectedOption === "post" && (
         <div>
           <label className="post_text">
-            <AutoResizeTextarea name="post" onChange={handleInputChange} 
-            placeholder="What would you like to post?..." />
+            <AutoResizeTextarea
+              name="post"
+              className="textarea"
+              onChange={(e) => setFormData({ ...formData, [e.target.name]: e.target.value })}
+              placeholder="What would you like to post?..."
+            />
           </label>
           <div className="post_interaction">
             <button type="button" onClick={() => alert("Image Popup")}>img</button>
@@ -44,12 +60,18 @@ function DynamicForm() {
       {selectedOption === "feedback" && (
         <div>
           <label>
-            <AutoResizeTextarea name="feedback" 
-            onChange={handleInputChange} placeholder="feedback..."/>
+            <AutoResizeTextarea
+              name="feedback"
+              onChange={(e) => setFormData({ ...formData, [e.target.name]: e.target.value })}
+              placeholder="Your feedback..."
+            />
           </label>
           <label>
             Rating:
-            <select name="rating" onChange={handleInputChange}>
+            <select
+              name="rating"
+              onChange={(e) => setFormData({ ...formData, [e.target.name]: e.target.value })}
+            >
               <option value="">--Rate us--</option>
               <option value="one_star">★</option>
               <option value="two_stars">★★</option>
@@ -61,10 +83,7 @@ function DynamicForm() {
         </div>
       )}
 
-      <button type="submit" disabled={!selectedOption}>
-        Submit
-      </button>
-    </form>
+    </FormHandler>
   );
 }
 

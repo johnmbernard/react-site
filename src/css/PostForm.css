@@ -30,7 +30,7 @@ label {
 }
 
 /* Textareas */
-AutoResizeTextarea {
+.textarea {
     width: 100%;
     height: 100px;
     padding: 10px;
