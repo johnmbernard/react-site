@@ -1,21 +1,46 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import DynamicForm from './components/PostForm'
-import './css/PostForm.css'
+import React from "react";
+import SignIn from "./components/SignIn";
+import DynamicForm from "./components/PostForm";
 
-function App() {
-  const [count, setCount] = useState(0)
-
+const App = () => {
   return (
     <>
-      
       <div>
-        <DynamicForm />
+        <h1>Firebase Authentication</h1>
+        <ErrorBoundary>
+          <SignIn />
+        </ErrorBoundary>
+      </div>
+
+      <div>
+        <ErrorBoundary>
+          <DynamicForm />
+        </ErrorBoundary>
       </div>
     </>
-  )
+  );
+};
+
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error("Error caught by ErrorBoundary:", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return <h2>Something went wrong.</h2>;
+    }
+    return this.props.children;
+  }
 }
 
-export default App
+export default App;
