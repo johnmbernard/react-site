@@ -1,29 +1,31 @@
 import React from 'react';
+import { ref, set, push } from 'firebase/database';
+import { database } from '../firebaseconfig/firebaseConfig'; // Import Firebase config
 
-const FormHandler = ({ formData, setFormData, endpoint, onSuccess, children }) => {
+const FormHandler = ({ formData, setFormData, databasePath, onSuccess, children }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
     try {
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
+      if (!databasePath) {
+        throw new Error('Database path is required');
       }
 
-      const result = await response.json();
-      console.log('Data successfully sent:', result);
+      // Push creates a unique ID for each entry (great for posts & feedback)
+      const newPostRef = push(ref(database, databasePath));
+      await set(newPostRef, formData);
+
+      console.log('Data successfully written to Firebase:', formData);
 
       if (onSuccess) {
-        onSuccess(result); // Callback function to process success
+        onSuccess(formData); // Callback to update the feed dynamically
       }
+
+      // Optionally reset form data
+      setFormData({});
+      
     } catch (error) {
-      console.error('Error submitting form:', error);
+      console.error('Error writing to database:', error);
     }
   };
 

@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import AutoResizeTextarea from "./AutoResizeTextarea";
 import FormHandler from "./FormHandler"; // Import the reusable component
 
-function DynamicForm() {
-  const [selectedOption, setSelectedOption] = useState("");
-  const [formData, setFormData] = useState({});
+function PostForm() {
+  const [selectedOption, setSelectedOption] = useState(""); // Tracks post/feedback selection
+  const [formData, setFormData] = useState({}); // Tracks form input values
 
   const handleOptionChange = (e) => {
     setSelectedOption(e.target.value); // Update the selected option
@@ -13,25 +13,24 @@ function DynamicForm() {
 
   const updateFeed = (newData) => {
     console.log("New data added to feed:", newData);
-    // Add logic to dynamically update the feed (state or API)
+    // Add logic to dynamically update the feed (e.g., update state)
   };
 
-  const determineEndpoint = () => {
-    // Define different endpoints based on selected option
+  const determineDatabasePath = () => {
     if (selectedOption === "post") {
-      return "https://your-api-endpoint.com/posts";
+      return "posts"; // Path in Firebase for posts
     } else if (selectedOption === "feedback") {
-      return "https://your-api-endpoint.com/feedback";
+      return "feedback"; // Path in Firebase for feedback
     }
-    return "";
+    return ""; // Default empty path
   };
 
   return (
     <FormHandler
       formData={formData}
       setFormData={setFormData}
-      endpoint={determineEndpoint()}
-      onSuccess={updateFeed}
+      databasePath={determineDatabasePath()} // Firebase database path
+      onSuccess={updateFeed} // Callback on successful write
     >
       <label htmlFor="dropdown">Post or Feedback?</label>
       <select id="dropdown" value={selectedOption} onChange={handleOptionChange}>
@@ -44,7 +43,7 @@ function DynamicForm() {
         <div>
           <label className="post_text">
             <AutoResizeTextarea
-              name="post"
+              name="message"
               className="textarea"
               onChange={(e) => setFormData({ ...formData, [e.target.name]: e.target.value })}
               placeholder="What would you like to post?..."
@@ -82,9 +81,8 @@ function DynamicForm() {
           </label>
         </div>
       )}
-
     </FormHandler>
   );
 }
 
-export default DynamicForm;
+export default PostForm;
