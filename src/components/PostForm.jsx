@@ -43,7 +43,7 @@ function PostForm() {
         <div>
           <label className="post_text">
             <AutoResizeTextarea
-              name="message"
+              name="post"
               className="textarea"
               onChange={(e) => setFormData({ ...formData, [e.target.name]: e.target.value })}
               placeholder="What would you like to post?..."

@@ -10,6 +10,7 @@ const FormHandler = ({ formData, setFormData, databasePath, onSuccess, children 
       if (!databasePath) {
         throw new Error('Database path is required');
       }
+      console.log("Submitting data:", formData);
 
       // Push creates a unique ID for each entry (great for posts & feedback)
       const newPostRef = push(ref(database, databasePath));
